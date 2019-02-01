@@ -121,7 +121,7 @@ class IdMapper {
 					// Ignore due to incorrect depot markings in the data
 					//fwrite(STDERR, 'Got '.$num.', database has '.$data['num']."\n");
 				}
-				$result[$jsonTripId] = $data;
+				$result[$this->jsonTrips[$jsonTripId]['id']] = $data;
 			}
 		}
 		return $result;
