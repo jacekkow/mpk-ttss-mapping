@@ -1,0 +1,5 @@
+{
+    "require": {
+        "google/gtfs-realtime-bindings": "^0.0.2"
+    }
+}
