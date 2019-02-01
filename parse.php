@@ -117,7 +117,12 @@ class IdMapper {
 			if(isset($this->jsonTrips[$jsonTripId])) {
 				$data = numToTypeB($gtfsTrip['id']);
 				$num = $gtfsTrip['num'];
-				if($data['num'] != $num) {
+				if(!is_array($data) || !isset($data['num'])) {
+					$data = [
+						'num' => $num,
+						'low' => 2,
+					];
+				} elseif($data['num'] != $num) {
 					// Ignore due to incorrect depot markings in the data
 					//fwrite(STDERR, 'Got '.$num.', database has '.$data['num']."\n");
 				}
