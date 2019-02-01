@@ -1,5 +1,6 @@
 <?php
-require_once 'vendor/autoload.php';
+require('vendor/autoload.php');
+require('common.php');
 
 use transit_realtime\FeedMessage;
 
@@ -53,6 +54,7 @@ class IdMapper {
 			$trip = $vehiclePosition->getTrip();
 			$tripId = $trip->getTripId();
 			$this->gtfsTrips[self::convertTripId($tripId)] = [
+				'id' => $entity->getId(),
 				'num' => $vehicle->getLicensePlate(),
 				'tripId' => $tripId,
 				'latitude' => $position->getLatitude(),
@@ -102,6 +104,7 @@ class IdMapper {
 		}
 		
 		if($options != 1) {
+			fwrite(STDERR, 'Found '.$options.' possible mappings!'."\n");
 			return FALSE;
 		}
 		return $bestOffset;
@@ -112,9 +115,12 @@ class IdMapper {
 		foreach($this->gtfsTrips as $gtfsTripId => $gtfsTrip) {
 			$jsonTripId = $gtfsTripId + $offset;
 			if(isset($this->jsonTrips[$jsonTripId])) {
-				$result[$jsonTripId] = [
-					'num' => $gtfsTrip['num'],
-				];
+				$data = numToTypeB($gtfsTrip['id']);
+				$num = $gtfsTrip['num'];
+				if($data['num'] != $num) {
+					fwrite(STDERR, 'Got '.$num.', database has '.$data['num']."\n");
+				}
+				$result[$jsonTripId] = $data;
 			}
 		}
 		return $result;
