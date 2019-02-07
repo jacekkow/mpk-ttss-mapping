@@ -1,5 +1,6 @@
 {
     "require": {
-        "google/gtfs-realtime-bindings": "^0.0.2"
+        "google/gtfs-realtime-bindings": "^0.0.2",
+        "monolog/monolog": "^1.24"
     }
 }
