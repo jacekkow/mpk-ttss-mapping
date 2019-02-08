@@ -10,6 +10,7 @@ $sources = [
 		'gtfs_file' => 'VehiclePositions_A.pb',
 		'ttss' => 'http://91.223.13.70/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
 		'ttss_file' => 'vehicles_A.json',
+		'result' => 'mapping_A.json',
 	],
 ];
 
@@ -36,7 +37,11 @@ foreach($sources as $name => $source) {
 		if($offset) {
 			$logger->info('Got offset '.$offset.', creating mapping...');
 			$mapping = $mapper->getMapping($offset);
-			echo json_encode($mapping);
+			$json = json_encode($mapping);
+			if(!file_put_contents(__DIR__.'/data/'.$source['result'].'.tmp', $json)) {
+				throw new Exception('Result save failed');
+			}
+			rename(__DIR__.'/data/'.$source['result'].'.tmp', __DIR__.'/data/'.$source['result']);
 		}
 		$logger->info('Finished');
 	} catch(Throwable $e) {
