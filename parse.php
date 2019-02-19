@@ -60,8 +60,10 @@ foreach($sources as $name => $source) {
 				if((int)substr($vehicle['num'], 2) != (int)$dbVehicle['num']) {
 					if($weight > $dbVehicle['weight']) {
 						$replace += 1;
+						$logger->warn($vehicle['num'].' voting to replace '.$dbVehicle['num'].' (same ID: '.$id.')');
 					} else {
 						$ignore += 1;
+						$logger->warn($vehicle['num'].' voting to ignore '.$dbVehicle['num'].' (same ID: '.$id.')');
 					}
 				}
 				continue;
@@ -70,6 +72,7 @@ foreach($sources as $name => $source) {
 			$dbVehicle = $db->getByNum($vehicle['num']);
 			if($dbVehicle && $dbVehicle['id'] != $id) {
 				$replace += 1;
+				$logger->warn($vehicle['id'].' voting to replace '.$dbVehicle['id'].' (same num: '.$vehicle['num'].')');
 			}
 		}
 		$logger->info('Weight: '.$weight.', ignore: '.$ignore.', replace: '.$replace);
