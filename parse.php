@@ -79,7 +79,7 @@ foreach($sources as $name => $source) {
 		$previousMapping = NULL;
 		if($incorrect > $correct && $maxWeight > $weight) {
 			throw new Exception('Ignoring result due to better data already present');
-		} elseif($old > 0 && $incorrect == 0) {
+		} elseif($old > $correct) {
 			$logger->warn('Replacing DB data with the new mapping');
 			$db->clear();
 		} else {
