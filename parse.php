@@ -52,36 +52,35 @@ foreach($sources as $name => $source) {
 		
 		$logger->info('Checking the data for correctness...');
 		$weight = count($mapping);
-		$replace = 0;
-		$ignore = 0;
+		
+		$correct = 0;
+		$incorrect = 0;
+		$old = 0;
+		$maxWeight = 0;
 		foreach($mapping as $id => $vehicle) {
 			$dbVehicle = $db->getById($id);
 			if($dbVehicle) {
-				if((int)substr($vehicle['num'], 2) != (int)$dbVehicle['num']) {
-					if($weight > $dbVehicle['weight']) {
-						$replace += 1;
-						$logger->warn($vehicle['num'].' voting to replace '.$dbVehicle['num'].' (same ID: '.$id.')');
-					} else {
-						$ignore += 1;
-						$logger->warn($vehicle['num'].' voting to ignore '.$dbVehicle['num'].' (same ID: '.$id.')');
-					}
+				$maxWeight = max($maxWeight, $dbVehicle['weight']);
+				if((int)substr($vehicle['num'], 2) == (int)$dbVehicle['num']) {
+					$correct += 1;
+				} else {
+					$incorrect += 1;
 				}
 				continue;
 			}
 			
 			$dbVehicle = $db->getByNum($vehicle['num']);
 			if($dbVehicle && $dbVehicle['id'] != $id) {
-				$replace += 1;
-				$logger->warn($vehicle['id'].' voting to replace '.$dbVehicle['id'].' (same num: '.$vehicle['num'].')');
+				$old += 1;
 			}
 		}
-		$logger->info('Weight: '.$weight.', ignore: '.$ignore.', replace: '.$replace);
+		$logger->info('Weight: '.$weight.', correct: '.$correct.', incorrect: '.$incorrect.', old: '.$old);
 		
 		$previousMapping = NULL;
-		if($ignore > 0 && $ignore >= $replace) {
+		if($incorrect > $correct && $maxWeight > $weight) {
 			throw new Exception('Ignoring result due to better data already present');
-		} elseif($replace > 0) {
-			$logger->warn('Replacing DB data with the mapping');
+		} elseif($old > 0 && $incorrect == 0) {
+			$logger->warn('Replacing DB data with the new mapping');
 			$db->clear();
 		} else {
 			$previousMapping = @json_decode(@file_get_contents($source['result']), TRUE);
