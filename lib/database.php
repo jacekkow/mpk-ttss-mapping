@@ -20,6 +20,18 @@ class Database {
 		$this->addStatement = $this->pdo->prepare('INSERT OR REPLACE INTO vehicles (id, num, weight) VALUES (?, ?, ?)');
 	}
 	
+	public function beginTransaction() {
+		$this->pdo->beginTransaction();
+	}
+	
+	public function commit() {
+		$this->pdo->commit();
+	}
+	
+	public function rollback() {
+		$this->pdo->rollback();
+	}
+	
 	public function getById($id) {
 		$this->getByIdStatement->execute([$id]);
 		return $this->getByIdStatement->fetch();
@@ -39,9 +51,11 @@ class Database {
 	}
 	
 	public function addMapping($mapping) {
+		$this->beginTransaction();
 		$weight = count($mapping);
 		foreach($mapping as $id => $vehicle) {
 			$this->add($id, (int)substr($vehicle['num'], 2), $weight);
 		}
+		$this->commit();
 	}
 }
