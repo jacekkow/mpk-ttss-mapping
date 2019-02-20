@@ -90,7 +90,7 @@ foreach($sources as $name => $source) {
 		
 		if(is_array($previousMapping)) {
 			$logger->info('Merging previous data with current mapping');
-			$mapping = $previousMapping + $mapping;
+			$mapping = $mapping + $previousMapping;
 			ksort($mapping);
 		}
 		
