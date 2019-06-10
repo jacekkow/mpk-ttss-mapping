@@ -7,6 +7,8 @@ $logger = new Monolog\Logger('Parse changes');
 
 $sources = [
 	'bus' => [
+		'gtfs' => 'ftp://ztp.krakow.pl/GTFS_KRK_A.zip',
+		'gtfs_file' => 'GTFS_KRK_A.zip',
 		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_A.pb',
 		'gtfsrt_file' => 'VehiclePositions_A.pb',
 		'ttss' => 'http://91.223.13.70/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
@@ -38,6 +40,7 @@ foreach($sources as $name => $source) {
 		$mapper = new Mapper();
 		
 		$mapper->loadTTSS($source['ttss_file']);
+
 		$timeDifference = time() - $mapper->getTTSSDate();
 		if(abs($timeDifference) > 60) {
 			throw new Exception('TTSS timestamp difference ('.$timeDifference.'s) is too high, aborting!');
@@ -48,6 +51,8 @@ foreach($sources as $name => $source) {
 		if(abs($timeDifference) > 60) {
 			throw new Exception('GTFSRT timestamp difference ('.$timeDifference.'s) is too high, aborting!');
 		}
+		
+		$mapper->loadGTFS($source['gtfs_file']);
 		
 		$db = new Database($source['database']);
 		

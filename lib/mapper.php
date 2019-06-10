@@ -9,6 +9,8 @@ class Mapper {
 	private $ttssTrips = [];
 	private $gtfsrtDate = NULL;
 	private $gtfsrtTrips = [];
+	private $gtfsTrips = [];
+	private $gtfsRoutes = [];
 	private $logger = NULL;
 	
 	private $specialNames = [
@@ -42,8 +44,11 @@ class Mapper {
 					continue;
 				}
 			}
+			$name = explode(' ', $vehicle->name, 2);
 			$this->ttssTrips[(int)$vehicle->tripId] = [
 				'id' => $vehicle->id,
+				'line' => $name[0],
+				'direction' => $name[1],
 				'latitude' => (float)$vehicle->latitude / 3600000.0,
 				'longitude' => (float)$vehicle->longitude / 3600000.0,
 			];
@@ -53,6 +58,29 @@ class Mapper {
 	
 	public function getTTSSDate() {
 		return $this->ttssDate / 1000.0;
+	}
+	
+	public function loadGTFS($file) {
+		$buffer_size = 512;
+		
+		$routes = fopen('phar://'.$file.'/routes.txt', 'r');
+		$route_header = fgetcsv($routes, $buffer_size);
+		while(($route = fgetcsv($routes, $buffer_size)) !== FALSE) {
+			$this->gtfsRoutes[$route[0]] = $route[2];
+		}
+		fclose($routes);
+		
+		$trips = fopen('phar://'.$file.'/trips.txt', 'r');
+		$trip_header = fgetcsv($trips, $buffer_size);
+		var_dump($trip_header);
+		while(($trip = fgetcsv($trips, $buffer_size)) !== FALSE) {
+			$this->gtfsTrips[$trip[0]] = [
+				'line' => $this->gtfsRoutes[$trip[1]] ?? NULL,
+				'route' => $trip[1],
+				'direction' => $trip[3],
+			];
+		}
+		fclose($trips);
 	}
 	
 	public function loadGTFSRT($file) {
@@ -79,6 +107,28 @@ class Mapper {
 	
 	public function getGTFSRTDate() {
 		return $this->gtfsrtDate;
+	}
+	
+	public function mapUsingCoords() {
+		$level = 0.002;
+		foreach($this->gtfsrtTrips as $gkey => $gtrip) {
+			$trip = $this->gtfsTrips[$gtrip['tripId']] ?? NULL;
+			
+			if($trip === NULL) continue;
+			
+			foreach($this->ttssTrips as $jkey => $jtrip) {
+				echo $gtrip['latitude'].' '.$jtrip['latitude']."\n";
+				echo $gtrip['longitude'].' '.$jtrip['longitude']."\n";
+				echo $jtrip['line'].' '.$trip['line']."\n";
+				echo "\n";
+				
+				if($jtrip['line'] != $trip['line']) continue;
+				if(abs($gtrip['latitude'] - $jtrip['latitude']) > $level) continue;
+				if(abs($gtrip['longitude'] - $jtrip['longitude']) < $level) continue;
+				
+				echo 'MATCH '.$gtrip['num'].' '.$gkey.' '.$jkey.' ('.($jkey-$gkey).')'."\n";
+			}
+		}
 	}
 	
 	public function findOffset() {
