@@ -6,9 +6,9 @@ require_once(__DIR__.'/lib/mapper.php');
 $logger = new Monolog\Logger('Parse changes');
 
 $sources = [
-	'buses' => [
-		'gtfs' => 'ftp://ztp.krakow.pl/VehiclePositions_A.pb',
-		'gtfs_file' => 'VehiclePositions_A.pb',
+	'bus' => [
+		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_A.pb',
+		'gtfsrt_file' => 'VehiclePositions_A.pb',
 		'ttss' => 'http://91.223.13.70/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
 		'ttss_file' => 'vehicles_A.json',
 		'database' => 'mapping_A.sqlite3',
@@ -19,25 +19,25 @@ $sources = [
 foreach($sources as $name => $source) {
 	$logger = new Monolog\Logger('fetch_'.$name);
 	try {
-		foreach(['gtfs_file', 'ttss_file', 'database', 'result'] as $field) {
+		foreach(['gtfsrt_file', 'ttss_file', 'database', 'result'] as $field) {
 			$source[$field] = __DIR__.'/data/'.$source[$field];
 		}
 		$source['result_temp'] = $source['result'].'.tmp';
 		
 		$logger->info('Fetching '.$name.' position data from FTP...');
-		$updated = ftp_fetch_if_newer($source['gtfs'], $source['gtfs_file']);
+		$updated = ftp_fetch_if_newer($source['gtfsrt'], $source['gtfsrt_file']);
 		if(!$updated) {
 			$logger->info('Nothing to do, remote file not newer than local one');
 			continue;
 		}
 		
-		$logger->info('Fetching '.$name.' positions from TTSS...');
-		fetch($source['ttss'],$source['ttss_file']);
+		$logger->info('Fetching '.$name.' position data from TTSS...');
+		fetch($source['ttss'], $source['ttss_file']);
 		
 		$logger->info('Loading data...');
 		$mapper = new Mapper();
 		$mapper->loadTTSS($source['ttss_file']);
-		$mapper->loadGTFS($source['gtfs_file']);
+		$mapper->loadGTFSRT($source['gtfsrt_file']);
 		
 		$db = new Database($source['database']);
 		
@@ -48,7 +48,7 @@ foreach($sources as $name => $source) {
 		}
 		
 		$logger->info('Got offset '.$offset.', creating mapping...');
-		$mapping = $mapper->getMapping($offset);
+		$mapping = $mapper->mapUsingOffset($offset);
 		
 		$logger->info('Checking the data for correctness...');
 		$weight = count($mapping);

@@ -5,8 +5,8 @@ require_once(__DIR__.'/vehicle_types.php');
 use transit_realtime\FeedMessage;
 
 class Mapper {
-	private $jsonTrips = [];
-	private $gtfsTrips = [];
+	private $ttssTrips = [];
+	private $gtfsrtTrips = [];
 	private $logger = NULL;
 	
 	private $specialNames = [
@@ -27,8 +27,8 @@ class Mapper {
 	}
 	
 	public function loadTTSS($file) {
-		$json = json_decode(file_get_contents($file));
-		foreach($json->vehicles as $vehicle) {
+		$ttss = json_decode(file_get_contents($file));
+		foreach($ttss->vehicles as $vehicle) {
 			if(isset($vehicle->isDeleted) && $vehicle->isDeleted) continue;
 			if(!isset($vehicle->tripId) || !$vehicle->tripId) continue;
 			if(!isset($vehicle->name) || !$vehicle->name) continue;
@@ -39,16 +39,16 @@ class Mapper {
 					continue;
 				}
 			}
-			$this->jsonTrips[(int)$vehicle->tripId] = [
+			$this->ttssTrips[(int)$vehicle->tripId] = [
 				'id' => $vehicle->id,
 				'latitude' => (float)$vehicle->latitude / 3600000.0,
 				'longitude' => (float)$vehicle->longitude / 3600000.0,
 			];
 		}
-		ksort($this->jsonTrips);
+		ksort($this->ttssTrips);
 	}
 	
-	public function loadGTFS($file) {
+	public function loadGTFSRT($file) {
 		$data = file_get_contents($file);
 		$feed = new FeedMessage();
 		$feed->parse($data);
@@ -58,7 +58,7 @@ class Mapper {
 			$vehicle = $vehiclePosition->getVehicle();
 			$trip = $vehiclePosition->getTrip();
 			$tripId = $trip->getTripId();
-			$this->gtfsTrips[self::convertTripId($tripId)] = [
+			$this->gtfsrtTrips[self::convertTripId($tripId)] = [
 				'id' => $entity->getId(),
 				'num' => $vehicle->getLicensePlate(),
 				'tripId' => $tripId,
@@ -66,21 +66,21 @@ class Mapper {
 				'longitude' => $position->getLongitude(),
 			];
 		}
-		ksort($this->gtfsTrips);
+		ksort($this->gtfsrtTrips);
 	}
 	
 	public function findOffset() {
-		if(count($this->jsonTrips) == 0 || count($this->gtfsTrips) == 0) {
+		if(count($this->ttssTrips) == 0 || count($this->gtfsrtTrips) == 0) {
 			return NULL;
 		}
 		
-		$jsonTripIds = array_keys($this->jsonTrips);
-		$gtfsTripIds = array_keys($this->gtfsTrips);
+		$ttssTripIds = array_keys($this->ttssTrips);
+		$gtfsTripIds = array_keys($this->gtfsrtTrips);
 		
 		$possibleOffsets = [];
-		for($i = 0; $i < count($this->jsonTrips); $i++) {
-			for($j = 0; $j < count($this->gtfsTrips); $j++) {
-				$possibleOffsets[$jsonTripIds[$i] - $gtfsTripIds[$j]] = TRUE;
+		for($i = 0; $i < count($this->ttssTrips); $i++) {
+			for($j = 0; $j < count($this->gtfsrtTrips); $j++) {
+				$possibleOffsets[$ttssTripIds[$i] - $gtfsTripIds[$j]] = TRUE;
 			}
 		}
 		$possibleOffsets = array_keys($possibleOffsets);
@@ -94,7 +94,7 @@ class Mapper {
 			
 			foreach($gtfsTripIds as $tripId) {
 				$tripId += $offset;
-				if(isset($this->jsonTrips[$tripId])) {
+				if(isset($this->ttssTrips[$tripId])) {
 					$matched++;
 				}
 			}
@@ -114,11 +114,11 @@ class Mapper {
 		return $bestOffset;
 	}
 	
-	public function getMapping($offset) {
+	public function mapUsingOffset($offset) {
 		$result = [];
-		foreach($this->gtfsTrips as $gtfsTripId => $gtfsTrip) {
-			$jsonTripId = $gtfsTripId + $offset;
-			if(isset($this->jsonTrips[$jsonTripId])) {
+		foreach($this->gtfsrtTrips as $gtfsTripId => $gtfsTrip) {
+			$ttssTripId = $gtfsTripId + $offset;
+			if(isset($this->ttssTrips[$ttssTripId])) {
 				$data = numToTypeB($gtfsTrip['id']);
 				$num = $gtfsTrip['num'];
 				if(!is_array($data) || !isset($data['num'])) {
@@ -130,7 +130,7 @@ class Mapper {
 					// Ignore due to incorrect depot markings in the data
 					//$this->logger->warn('Got '.$num.', database has '.$data['num']);
 				}
-				$result[$this->jsonTrips[$jsonTripId]['id']] = $data;
+				$result[$this->ttssTrips[$ttssTripId]['id']] = $data;
 			}
 		}
 		return $result;
