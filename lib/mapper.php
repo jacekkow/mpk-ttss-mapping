@@ -5,7 +5,9 @@ require_once(__DIR__.'/vehicle_types.php');
 use transit_realtime\FeedMessage;
 
 class Mapper {
+	private $ttssDate = NULL;
 	private $ttssTrips = [];
+	private $gtfsrtDate = NULL;
 	private $gtfsrtTrips = [];
 	private $logger = NULL;
 	
@@ -28,6 +30,7 @@ class Mapper {
 	
 	public function loadTTSS($file) {
 		$ttss = json_decode(file_get_contents($file));
+		$this->ttssDate = $ttss->lastUpdate;
 		foreach($ttss->vehicles as $vehicle) {
 			if(isset($vehicle->isDeleted) && $vehicle->isDeleted) continue;
 			if(!isset($vehicle->tripId) || !$vehicle->tripId) continue;
@@ -48,10 +51,15 @@ class Mapper {
 		ksort($this->ttssTrips);
 	}
 	
+	public function getTTSSDate() {
+		return $this->ttssDate / 1000.0;
+	}
+	
 	public function loadGTFSRT($file) {
 		$data = file_get_contents($file);
 		$feed = new FeedMessage();
 		$feed->parse($data);
+		$this->gtfsrtDate = $feed->header->timestamp;
 		foreach ($feed->getEntityList() as $entity) {
 			$vehiclePosition = $entity->getVehicle();
 			$position = $vehiclePosition->getPosition();
@@ -67,6 +75,10 @@ class Mapper {
 			];
 		}
 		ksort($this->gtfsrtTrips);
+	}
+	
+	public function getGTFSRTDate() {
+		return $this->gtfsrtDate;
 	}
 	
 	public function findOffset() {

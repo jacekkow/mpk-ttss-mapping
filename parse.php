@@ -36,8 +36,18 @@ foreach($sources as $name => $source) {
 		
 		$logger->info('Loading data...');
 		$mapper = new Mapper();
+		
 		$mapper->loadTTSS($source['ttss_file']);
+		$timeDifference = time() - $mapper->getTTSSDate();
+		if(abs($timeDifference) > 60) {
+			throw new Exception('TTSS timestamp difference ('.$timeDifference.'s) is too high, aborting!');
+		}
+		
 		$mapper->loadGTFSRT($source['gtfsrt_file']);
+		$timeDifference = time() - $mapper->getGTFSRTDate();
+		if(abs($timeDifference) > 60) {
+			throw new Exception('GTFSRT timestamp difference ('.$timeDifference.'s) is too high, aborting!');
+		}
 		
 		$db = new Database($source['database']);
 		
