@@ -13,6 +13,7 @@ $sources = [
 		'ttss_file' => 'vehicles_A.json',
 		'database' => 'mapping_A.sqlite3',
 		'result' => 'mapping_A.json',
+		'mapper' => 'numToTypeB',
 	],
 ];
 
@@ -58,7 +59,7 @@ foreach($sources as $name => $source) {
 		}
 		
 		$logger->info('Got offset '.$offset.', creating mapping...');
-		$mapping = $mapper->mapUsingOffset($offset);
+		$mapping = $mapper->mapUsingOffset($offset, $source['mapper']);
 		
 		$logger->info('Checking the data for correctness...');
 		$weight = count($mapping);

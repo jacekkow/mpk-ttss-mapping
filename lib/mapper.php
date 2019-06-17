@@ -126,12 +126,12 @@ class Mapper {
 		return $bestOffset;
 	}
 	
-	public function mapUsingOffset($offset) {
+	public function mapUsingOffset($offset, $mapper) {
 		$result = [];
 		foreach($this->gtfsrtTrips as $gtfsTripId => $gtfsTrip) {
 			$ttssTripId = $gtfsTripId + $offset;
 			if(isset($this->ttssTrips[$ttssTripId])) {
-				$data = numToTypeB($gtfsTrip['id']);
+				$data = $mapper($gtfsTrip['id']);
 				$num = $gtfsTrip['num'];
 				if(!is_array($data) || !isset($data['num'])) {
 					$data = [
