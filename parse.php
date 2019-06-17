@@ -49,13 +49,13 @@ foreach($sources as $name => $source) {
 		
 		$mapper->loadTTSS($source['ttss_file']);
 		$timeDifference = time() - $mapper->getTTSSDate();
-		if(abs($timeDifference) > 60) {
+		if(abs($timeDifference) > 120) {
 			throw new Exception('TTSS timestamp difference ('.$timeDifference.'s) is too high, aborting!');
 		}
 		
 		$mapper->loadGTFSRT($source['gtfsrt_file']);
 		$timeDifference = time() - $mapper->getGTFSRTDate();
-		if(abs($timeDifference) > 60) {
+		if(abs($timeDifference) > 120) {
 			throw new Exception('GTFSRT timestamp difference ('.$timeDifference.'s) is too high, aborting!');
 		}
 		
