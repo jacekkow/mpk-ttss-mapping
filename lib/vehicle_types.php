@@ -7,7 +7,7 @@ function numToType($id, $data, $defaultLow=NULL) {
 			return [
 				'num' => $line[2] . str_pad($id, 3, '0', STR_PAD_LEFT),
 				'type' => $line[3],
-				'low' => isset($line[4]) ? $line[4] : $defaultLow,
+				'low' => (int)(isset($line[4]) ? $line[4] : $defaultLow),
 			];
 		}
 	}
