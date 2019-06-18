@@ -135,7 +135,7 @@ class Mapper {
 				$num = $gtfsTrip['num'];
 				if(!is_array($data) || !isset($data['num'])) {
 					$data = [
-						'num' => $num ?: $gtfsTrip['id'],
+						'num' => $num ?: '??'.$gtfsTrip['id'],
 						'low' => NULL,
 					];
 				} elseif($data['num'] != $num) {
