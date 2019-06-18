@@ -16,7 +16,7 @@ $sources = [
 		'mapper' => 'numToTypeB',
 	],
 	'tram' => [
-		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions.pb',
+		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_T.pb',
 		'gtfsrt_file' => 'VehiclePositions_T.pb',
 		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
 		'ttss_file' => 'vehicles_T.json',
