@@ -24,6 +24,15 @@ $sources = [
 		'result' => 'mapping_T.json',
 		'mapper' => 'numToTypeT',
 	],
+	'tram2' => [
+		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions.pb',
+		'gtfsrt_file' => 'VehiclePositions_T.pb',
+		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
+		'ttss_file' => 'vehicles_T.json',
+		'database' => 'mapping_T.sqlite3',
+		'result' => 'mapping_T.json',
+		'mapper' => 'numToTypeT',
+	],
 ];
 
 foreach($sources as $name => $source) {
