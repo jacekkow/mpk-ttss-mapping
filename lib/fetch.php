@@ -51,7 +51,7 @@ function ftp_fetch_if_newer($url, $file = NULL) {
 	
 	$updated = FALSE;
 	
-	if($localSize != $remoteSize || $localTime < $remoteTime) {
+	if($localTime < $remoteTime || ($localTime == $remoteTime && $localSize != $remoteSize)) {
 		if(file_exists($file.'.tmp')) {
 			unlink($file.'.tmp');
 		}
