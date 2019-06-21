@@ -82,12 +82,12 @@ foreach($sources as $name => $source) {
 		
 		$db->addMapping($mapping);
 		
-		createMapping($db, $source['mapper'], $source);
+		$finalMapping = createMapping($db, $source['mapper'], $source);
 		
 		
 		$logger->info('Creating vehicle list...');
 		
-		createVehiclesList($mapper->getTTSSTrips(), $jsonContent, $source);
+		createVehiclesList($mapper->getTTSSTrips(), $finalMapping, $source);
 		
 		$logger->info('Finished');
 	} catch(Throwable $e) {
