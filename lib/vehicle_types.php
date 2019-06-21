@@ -11,7 +11,11 @@ function numToType($id, $data, $defaultLow=NULL) {
 			];
 		}
 	}
-	return [];
+	return [
+		'num' => '??'.$id,
+		'type' => '?',
+		'low' => NULL,
+	];
 }
 function numToTypeT($id) {
 $data = <<<'END'
