@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__.'/../vendor/autoload.php');
-require_once(__DIR__.'/vehicle_types.php');
 
 use transit_realtime\FeedMessage;
 
@@ -42,8 +41,8 @@ class Mapper {
 					continue;
 				}
 			}
-			$this->ttssTrips[(int)$vehicle->tripId] = [
-				'id' => $vehicle->id,
+			$this->ttssTrips[(string)$vehicle->tripId] = [
+				'id' => (string)$vehicle->id,
 				'latitude' => (float)$vehicle->latitude / 3600000.0,
 				'longitude' => (float)$vehicle->longitude / 3600000.0,
 			];
@@ -67,7 +66,7 @@ class Mapper {
 			$trip = $vehiclePosition->getTrip();
 			$tripId = $trip->getTripId();
 			$this->gtfsrtTrips[self::convertTripId($tripId)] = [
-				'id' => $entity->getId(),
+				'id' => (string)$entity->getId(),
 				'num' => $vehicle->getLicensePlate(),
 				'tripId' => $tripId,
 				'latitude' => $position->getLatitude(),
@@ -126,23 +125,12 @@ class Mapper {
 		return $bestOffset;
 	}
 	
-	public function mapUsingOffset($offset, $mapper) {
+	public function mapUsingOffset($offset) {
 		$result = [];
 		foreach($this->gtfsrtTrips as $gtfsTripId => $gtfsTrip) {
 			$ttssTripId = $gtfsTripId + $offset;
 			if(isset($this->ttssTrips[$ttssTripId])) {
-				$data = $mapper($gtfsTrip['id']);
-				$num = $gtfsTrip['num'];
-				if(!is_array($data) || !isset($data['num'])) {
-					$data = [
-						'num' => $num ?: '??'.$gtfsTrip['id'],
-						'low' => NULL,
-					];
-				} elseif($data['num'] != $num) {
-					// Ignore due to incorrect depot markings in the data
-					//$this->logger->warn('Got '.$num.', database has '.$data['num']);
-				}
-				$result[$this->ttssTrips[$ttssTripId]['id']] = $data;
+				$result[$this->ttssTrips[$ttssTripId]['id']] = $gtfsTrip['id'];
 			}
 		}
 		return $result;

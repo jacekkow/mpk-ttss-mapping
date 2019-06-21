@@ -1,9 +1,10 @@
 <?php
 class Database {
 	private $pdo;
-	private $getByIdStatement;
-	private $getByNumStatement;
 	private $addStatement;
+	
+	private $cacheId;
+	private $cacheNum;
 	
 	public function __construct($file) {
 		$this->pdo = new PDO('sqlite:'.$file);
@@ -15,9 +16,9 @@ class Database {
 			weight INT
 		)');
 		
-		$this->getByIdStatement = $this->pdo->prepare('SELECT num, weight FROM vehicles WHERE id=? LIMIT 1');
-		$this->getByNumStatement = $this->pdo->prepare('SELECT id, weight FROM vehicles WHERE num=? LIMIT 1');
-		$this->addStatement = $this->pdo->prepare('INSERT OR REPLACE INTO vehicles (id, num, weight) VALUES (?, ?, ?)');
+		$this->addStatement = $this->pdo->prepare('INSERT OR REPLACE INTO vehicles (id, num, weight) VALUES (:id, :num, :weight)');
+		
+		$this->_cacheClear();
 	}
 	
 	public function beginTransaction() {
@@ -32,29 +33,66 @@ class Database {
 		$this->pdo->rollback();
 	}
 	
+	protected function _cachePopulate() {
+		if($this->cacheId === NULL) {
+			$st = $this->pdo->prepare('SELECT * FROM vehicles');
+			$st->execute();
+			$result = $st->fetchAll(PDO::FETCH_ASSOC);
+			
+			$this->cacheId = [];
+			$this->cacheNum = [];
+			foreach($result as $vehicle) {
+				$this->_cacheAdd($vehicle);
+			}
+		}
+	}
+	
+	protected function _cacheAdd($vehicle) {
+		$this->_cachePopulate();
+		$this->cacheId[$vehicle['id']] = $vehicle;
+		$this->cacheNum[$vehicle['num']] = $vehicle;
+	}
+	
+	protected function _cacheClear() {
+		$this->cacheId = NULL;
+		$this->cacheNum = NULL;
+	}
+	
+	public function getAll() {
+		$this->_cachePopulate();
+		return $this->cacheId;
+	}
+	
 	public function getById($id) {
-		$this->getByIdStatement->execute([$id]);
-		return $this->getByIdStatement->fetch();
+		$this->_cachePopulate();
+		return $this->cacheId[$id] ?? NULL;
 	}
 	
 	public function getByNum($num) {
-		$st = $this->getByNumStatement->execute([(int)substr($num, 2)]);
-		return $this->getByNumStatement->fetch();
+		$this->_cachePopulate();
+		return $this->cacheNum[$num] ?? NULL;
 	}
 	
 	public function clear() {
 		$this->pdo->query('DELETE FROM vehicles');
+		$this->_cacheClear();
 	}
 	
 	public function add($id, $num, $weight) {
-		$this->addStatement->execute([$id, $num, $weight]);
+		$vehicle = [
+			'id' => (string)$id,
+			'num' => (string)$num,
+			'weight' => (string)$weight
+		];
+		$this->addStatement->execute($vehicle);
+		$this->_cacheAdd($vehicle);
 	}
 	
 	public function addMapping($mapping) {
 		$this->beginTransaction();
 		$weight = count($mapping);
-		foreach($mapping as $id => $vehicle) {
-			$this->add($id, (int)substr($vehicle['num'], 2), $weight);
+		foreach($mapping as $id => $num) {
+			$this->add($id, $num, $weight);
 		}
 		$this->commit();
 	}

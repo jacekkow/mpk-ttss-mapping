@@ -2,8 +2,7 @@
 require_once(__DIR__.'/lib/database.php');
 require_once(__DIR__.'/lib/fetch.php');
 require_once(__DIR__.'/lib/mapper.php');
-
-$logger = new Monolog\Logger('Parse changes');
+require_once(__DIR__.'/lib/vehicle_types.php');
 
 $sources = [
 	'bus' => [
@@ -77,7 +76,7 @@ foreach($sources as $name => $source) {
 		}
 		
 		$logger->info('Got offset '.$offset.', creating mapping...');
-		$mapping = $mapper->mapUsingOffset($offset, $source['mapper']);
+		$mapping = $mapper->mapUsingOffset($offset);
 		
 		$logger->info('Checking the data for correctness...');
 		$weight = count($mapping);
@@ -86,11 +85,11 @@ foreach($sources as $name => $source) {
 		$incorrect = 0;
 		$old = 0;
 		$maxWeight = 0;
-		foreach($mapping as $id => $vehicle) {
+		foreach($mapping as $id => $num) {
 			$dbVehicle = $db->getById($id);
 			if($dbVehicle) {
-				$maxWeight = max($maxWeight, $dbVehicle['weight']);
-				if((int)substr($vehicle['num'], 2) == (int)$dbVehicle['num']) {
+				$maxWeight = max($maxWeight, (int)$dbVehicle['weight']);
+				if($num === $dbVehicle['num']) {
 					$correct += 1;
 				} else {
 					$incorrect += 1;
@@ -98,32 +97,26 @@ foreach($sources as $name => $source) {
 				continue;
 			}
 			
-			$dbVehicle = $db->getByNum($vehicle['num']);
-			if($dbVehicle && $dbVehicle['id'] != $id) {
+			$dbVehicle = $db->getByNum($num);
+			if($dbVehicle && $dbVehicle['id'] !== $id) {
 				$old += 1;
 			}
 		}
+
 		$logger->info('Weight: '.$weight.', correct: '.$correct.', incorrect: '.$incorrect.', old: '.$old);
 		
-		$previousMapping = NULL;
 		if($incorrect > $correct && $maxWeight > $weight) {
 			throw new Exception('Ignoring result due to better data already present');
-		} elseif($old > $correct) {
-			$logger->warn('Replacing DB data with the new mapping');
-			$db->clear();
-		} else {
-			$previousMapping = @json_decode(@file_get_contents($source['result']), TRUE);
 		}
 		
 		$db->addMapping($mapping);
 		
-		if(is_array($previousMapping)) {
-			$logger->info('Merging previous data with current mapping');
-			$mapping = $mapping + $previousMapping;
-			ksort($mapping);
+		$jsonContent = [];
+		foreach($db->getAll() as $vehicle) {
+			$jsonContent[$vehicle['id']] = $source['mapper']($vehicle['num']);
 		}
 		
-		$json = json_encode($mapping);
+		$json = json_encode($jsonContent);
 		if(!file_put_contents($source['result_temp'], $json)) {
 			throw new Exception('Result save failed');
 		}
