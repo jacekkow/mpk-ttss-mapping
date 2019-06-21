@@ -3,6 +3,7 @@ require_once(__DIR__.'/vendor/autoload.php');
 require_once(__DIR__.'/lib/database.php');
 require_once(__DIR__.'/lib/fetch.php');
 require_once(__DIR__.'/lib/mapper.php');
+require_once(__DIR__.'/lib/output.php');
 require_once(__DIR__.'/lib/vehicle_types.php');
 require_once(__DIR__.'/config.php');
 
@@ -76,6 +77,9 @@ foreach($sources as $name => $source) {
 			throw new Exception('Ignoring result due to better data already present');
 		}
 		
+		
+		$logger->info('Creating mapping...');
+		
 		$db->addMapping($mapping);
 		
 		$jsonContent = [];
@@ -88,6 +92,12 @@ foreach($sources as $name => $source) {
 			throw new Exception('Result save failed');
 		}
 		rename($source['result_temp'], $source['result']);
+		
+		
+		$logger->info('Creating vehicle list...');
+		
+		createVehiclesList($mapper->getTTSSTrips(), $jsonContent, $source);
+		
 		$logger->info('Finished');
 	} catch(Throwable $e) {
 		$logger->error($e->getMessage(), ['exception' => $e, 'exception_string' => (string)$e]);

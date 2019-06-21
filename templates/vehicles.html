@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<title>Vehicles on lines (TTSS-based)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style type="text/css">
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+th, td {
+	border: 1px solid black;
+	padding: 5px;
+}
+td {
+	vertical-align: top;
+	text-align: center;
+}
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+.low {
+	color: #000;
+}
+.low0 {
+	color: #C70;
+}
+.low1, .low2 {
+	color: #070;
+}
+</style>
+
+<table>
+
+<thead>
+<tr>
+{% for line in lines|keys %}
+<th>{{ line | e }}</th>
+{% endfor %}
+</tr>
+</thead>
+
+<tbody>
+<tr>
+{% for trips in lines %}
+<td>
+{% for trip in trips %}
+<a href="https://mpk.jacekk.net/map.html#!{{ prefix }}{{ trip.trip.id | e }}" class="low{{ trip.vehicle.low | default }}">
+{{ trip.vehicle.num | default('<?>') | e }}<br />
+</a>
+{% endfor %}
+</td>
+{% endfor %}
+</tr>
+</tbody>
+
+</table>

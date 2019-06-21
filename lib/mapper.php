@@ -34,13 +34,16 @@ class Mapper {
 			if(!isset($vehicle->name) || !$vehicle->name) continue;
 			if(!isset($vehicle->latitude) || !$vehicle->latitude) continue;
 			if(!isset($vehicle->longitude) || !$vehicle->longitude) continue;
-			foreach($this->specialNames as $name) {
-				if(substr($vehicle->name, -strlen($name)) == $name) {
+			list($line, $direction) = explode(' ', $vehicle->name, 2);
+			foreach($this->specialNames as $specialName) {
+				if(substr($vehicle->name, -strlen($specialName)) == $specialName) {
 					continue;
 				}
 			}
 			$this->ttssTrips[(string)$vehicle->tripId] = [
 				'id' => (string)$vehicle->id,
+				'line' => $line,
+				'direction' => $direction,
 				'latitude' => (float)$vehicle->latitude / 3600000.0,
 				'longitude' => (float)$vehicle->longitude / 3600000.0,
 			];
@@ -50,6 +53,10 @@ class Mapper {
 	
 	public function getTTSSDate() {
 		return $this->ttssDate / 1000.0;
+	}
+	
+	public function getTTSSTrips() {
+		return $this->ttssTrips;
 	}
 	
 	public function loadGTFSRT($file) {

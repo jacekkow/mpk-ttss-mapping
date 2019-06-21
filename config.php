@@ -7,7 +7,9 @@ $sources = [
 		'ttss_file' => 'vehicles_A.json',
 		'database' => 'mapping_A.sqlite3',
 		'result' => 'mapping_A.json',
+		'result_vehicles' => 'vehicles_A.html',
 		'mapper' => 'numToTypeB',
+		'prefix' => 'b',
 	],
 	'tram' => [
 		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_T.pb',
@@ -16,7 +18,9 @@ $sources = [
 		'ttss_file' => 'vehicles_T.json',
 		'database' => 'mapping_T.sqlite3',
 		'result' => 'mapping_T.json',
+		'result_vehicles' => 'vehicles_T.html',
 		'mapper' => 'numToTypeT',
+		'prefix' => 't',
 	],
 	'tram2' => [
 		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions.pb',
@@ -25,14 +29,18 @@ $sources = [
 		'ttss_file' => 'vehicles_T.json',
 		'database' => 'mapping_T.sqlite3',
 		'result' => 'mapping_T.json',
+		'result_vehicles' => 'vehicles_T.html',
 		'mapper' => 'numToTypeT',
+		'prefix' => 't',
 	],
 ]; 
 
 foreach($sources as $name => &$source) {
-	foreach(['gtfsrt_file', 'ttss_file', 'database', 'result'] as $field) {
+	foreach(['gtfsrt_file', 'ttss_file', 'database', 'result', 'result_vehicles'] as $field) {
 		$source[$field] = __DIR__.'/data/'.$source[$field];
 	}
+	
 	$source['result_temp'] = $source['result'].'.tmp';
+	$source['result_vehicles_temp'] = $source['result_vehicles'].'.tmp';
 }
 unset($source);
