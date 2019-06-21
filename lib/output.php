@@ -1,4 +1,21 @@
 <?php
+function createMapping($db, $mapFunction, $saveConfig = FALSE) {
+	$mapping = [];
+	foreach($db->getAll() as $vehicle) {
+		$mapping[$vehicle['id']] = $mapFunction($vehicle['num']);
+	}
+	
+	if($saveConfig) {
+		$json = json_encode($mapping);
+		if(!file_put_contents($saveConfig['result_temp'], $json)) {
+			throw new Exception('Result save failed');
+		}
+		rename($saveConfig['result_temp'], $saveConfig['result']);
+	}
+	
+	return $mapping;
+}
+
 function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
 	$lines = [];
 	foreach($trips as $trip) {

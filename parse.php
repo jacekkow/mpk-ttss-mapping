@@ -82,16 +82,7 @@ foreach($sources as $name => $source) {
 		
 		$db->addMapping($mapping);
 		
-		$jsonContent = [];
-		foreach($db->getAll() as $vehicle) {
-			$jsonContent[$vehicle['id']] = $source['mapper']($vehicle['num']);
-		}
-		
-		$json = json_encode($jsonContent);
-		if(!file_put_contents($source['result_temp'], $json)) {
-			throw new Exception('Result save failed');
-		}
-		rename($source['result_temp'], $source['result']);
+		createMapping($db, $source['mapper'], $source);
 		
 		
 		$logger->info('Creating vehicle list...');
