@@ -18,6 +18,9 @@ function numToType($id, $data, $defaultLow=NULL) {
 	];
 }
 function numToTypeT($id) {
+	if((int)$id == 250) {
+		$id = 410;
+	}
 $data = <<<'END'
 101	107	HW	E1	0
 108	113	RW	E1	0
