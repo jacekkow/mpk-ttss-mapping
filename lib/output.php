@@ -35,6 +35,12 @@ function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
 	}
 	unset($line);
 	ksort($lines);
+	foreach($vehicles as &$vehicle) {
+		usort($vehicle, function($a, $b) {
+			return (substr($a['num'] ?? '', 2) <=> substr($b['num'] ?? '', 2));
+		});
+	}
+	unset($vehicle);
 	ksort($vehicles);
 	
 	if($saveConfig) {
