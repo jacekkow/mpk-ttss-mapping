@@ -6,6 +6,11 @@
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+	margin: 10px 0;
+}
+caption {
+	text-align: left;
+	font-size: 120%;
 }
 th, td {
 	border: 1px solid black;
@@ -13,6 +18,8 @@ th, td {
 }
 td {
 	vertical-align: top;
+}
+table.center td {
 	text-align: center;
 }
 a {
@@ -32,8 +39,8 @@ a:hover {
 }
 </style>
 
-<table>
-
+<table class="center">
+<caption>Vehicles by line</caption>
 <thead>
 <tr>
 {% for line in lines|keys %}
@@ -41,13 +48,12 @@ a:hover {
 {% endfor %}
 </tr>
 </thead>
-
 <tbody>
 <tr>
 {% for trips in lines %}
 <td>
 {% for trip in trips %}
-<a href="https://mpk.jacekk.net/map.html#!{{ prefix }}{{ trip.trip.id | e }}" class="low{{ trip.vehicle.low | default }}">
+<a href="https://mpk.jacekk.net/map.html#!{{ prefix }}{{ trip.vehicle.trip | e }}" class="low{{ trip.vehicle.low | default }}">
 {{ trip.vehicle.num | default('<?>') | e }}<br />
 </a>
 {% endfor %}
@@ -55,6 +61,24 @@ a:hover {
 {% endfor %}
 </tr>
 </tbody>
+</table>
+
+<table>
+<caption>Vehicles by type</caption>
+{% for type, vhcls in vehicles %}
+<tr>
+<th>{{ type }}</th>
+<td>{{ vhcls | length }}</td>
+<td>
+{% for vehicle in vhcls %}
+<a href="https://mpk.jacekk.net/map.html#!{{ prefix }}{{ vehicle.trip | e }}" class="low{{ vehicle.low | default }}">
+{{ vehicle.num | default('<?>') | e }}
+</a>
+{% endfor %}
+</td>
+</tr>
+{% endfor %}
+</table>
 
 Generated at {{ "now" | date("Y-m-d H:i:s P") }}
 

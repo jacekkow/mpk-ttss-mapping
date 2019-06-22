@@ -18,11 +18,15 @@ function createMapping($db, $mapFunction, $saveConfig = FALSE) {
 
 function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
 	$lines = [];
+	$vehicles = [];
 	foreach($trips as $trip) {
+		$vehicle = $mapping[$trip['id']] ?? [];
+		$vehicle += ['trip' => $trip['id']];
 		$lines[$trip['line']][] = [
 			'trip' => $trip,
-			'vehicle' => $mapping[$trip['id']] ?? [],
+			'vehicle' => $vehicle,
 		];
+		$vehicles[$vehicle['type'] ?? '?'][] = $vehicle;
 	}
 	foreach($lines as &$line) {
 		usort($line, function($a, $b) {
@@ -31,6 +35,7 @@ function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
 	}
 	unset($line);
 	ksort($lines);
+	ksort($vehicles);
 	
 	if($saveConfig) {
 		$twigLoader = new \Twig\Loader\FilesystemLoader(__DIR__.'/../templates');
@@ -38,6 +43,7 @@ function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
 		
 		$vehiclesHtml = $twig->render('vehicles.html', [
 			'lines' => $lines,
+			'vehicles' => $vehicles,
 			'prefix' => $saveConfig['prefix'],
 		]);
 		if(!file_put_contents($saveConfig['result_vehicles_temp'], $vehiclesHtml)) {
