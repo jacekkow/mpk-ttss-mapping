@@ -1,4 +1,5 @@
 <?php
+$tramTypes = new TramTypes();
 $sources = [
 	'bus' => [
 		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_A.pb',
@@ -8,7 +9,7 @@ $sources = [
 		'database' => 'mapping_A.sqlite3',
 		'result' => 'mapping_A.json',
 		'result_vehicles' => 'vehicles_A.html',
-		'mapper' => 'numToTypeB',
+		'mapper' => new BusTypes(),
 		'prefix' => 'b',
 	],
 	'tram' => [
@@ -19,7 +20,7 @@ $sources = [
 		'database' => 'mapping_T.sqlite3',
 		'result' => 'mapping_T.json',
 		'result_vehicles' => 'vehicles_T.html',
-		'mapper' => 'numToTypeT',
+		'mapper' => $tramTypes,
 		'prefix' => 't',
 	],
 	'tram2' => [
@@ -30,7 +31,7 @@ $sources = [
 		'database' => 'mapping_T.sqlite3',
 		'result' => 'mapping_T.json',
 		'result_vehicles' => 'vehicles_T.html',
-		'mapper' => 'numToTypeT',
+		'mapper' => $tramTypes,
 		'prefix' => 't',
 	],
 ]; 

@@ -1,71 +1,7 @@
 <?php
-function numToType($id, $data, $defaultLow=NULL) {
-	$data = explode("\n", trim($data));
-	foreach($data as $line) {
-		$line = explode("\t", trim($line));
-		if((int)$line[0] <= (int)$id && (int)$id <= (int)$line[1]) {
-			return [
-				'num' => $line[2] . str_pad($id, 3, '0', STR_PAD_LEFT),
-				'type' => $line[3],
-				'low' => (int)(isset($line[4]) ? $line[4] : $defaultLow),
-			];
-		}
-	}
-	return [
-		'num' => '??'.$id,
-		'type' => '?',
-		'low' => NULL,
-	];
-}
-function numToTypeT($id) {
-	if((int)$id == 250) {
-		$id = 410;
-	}
-$data = <<<'END'
-101	107	HW	E1	0
-108	113	RW	E1	0
-114	126	HW	E1	0
-127	127	RW	E1	0
-128	130	HW	E1	0
-131	132	RW	E1	0
-133	133	HW	E1	0
-134	134	RW	E1	0
-135	136	HW	E1	0
-137	139	RW	E1	0
-140	147	HW	E1	0
-148	150	RW	E1	0
-151	152	HW	E1	0
-153	153	RW	E1	0
-154	154	HW	E1	0
-155	155	RW	E1	0
-156	158	HW	E1	0
-159	159	RW	E1	0
-160	174	HW	E1	0
-201	245	RZ	105N	0
-246	299	HZ	105N	0
-301	310	RF	GT8S	0
-311	311	RF	GT8N	1
-312	312	RF	GT8S	0
-313	313	RF	GT8C	1
-314	317	RF	GT8S	0
-318	329	RF	GT8N	1
-401	440	HL	EU8N	1
-451	456	HK	N8C-NF	1
-457	461	HK	N8S-NF	1
-462	462	HK	N8C-NF	1
-601	614	RP	NGT6 (1)	2
-615	626	RP	NGT6 (2)	2
-627	650	RP	NGT6 (3)	2
-801	824	RY	NGT8	2
-899	899	RY	126N	2
-901	914	RG	2014N	2
-915	936	HG	2014N	2
-999	999	HG	405N	1
-END;
-	return numToType($id, $data);
-}
-function numToTypeB($id) {
-$data = <<<'END'
+class BusTypes extends VehicleTypes {
+	public function __construct() {
+		$data = <<<'END'
 2	4	DN	Solaris Urbino 18 IV Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	96	BH	Volvo 7900A Hybrid
@@ -112,5 +48,6 @@ $data = <<<'END'
 978	991	PU	Solaris Urbino 12 IV
 992	997	BU	Solaris Urbino 12 IV
 END;
-	return numToType($id, $data, 2);
+		parent::__construct($data, 2);
+	}
 }

@@ -1,22 +1,19 @@
 <?php
 require_once(__DIR__.'/vendor/autoload.php');
-require_once(__DIR__.'/lib/fetch.php');
-require_once(__DIR__.'/lib/output.php');
-require_once(__DIR__.'/lib/vehicle_types.php');
 require_once(__DIR__.'/config.php');
 
 foreach($sources as $name => $source) {
 	$logger = new Monolog\Logger('fetch_'.$name);
 	try {
 		$logger->info('Fetching '.$name.' position data from FTP...');
-		$updated = ftp_fetch_if_newer($source['gtfsrt'], $source['gtfsrt_file']);
+		$updated = Fetch::ftp($source['gtfsrt'], $source['gtfsrt_file']);
 		if(!$updated) {
 			$logger->info('Nothing to do, remote file not newer than local one');
 			continue;
 		}
 		
 		$logger->info('Fetching '.$name.' position data from TTSS...');
-		fetch($source['ttss'], $source['ttss_file']);
+		Fetch::generic($source['ttss'], $source['ttss_file']);
 		
 		$logger->info('Loading data...');
 		$mapper = new Mapper();
@@ -80,12 +77,12 @@ foreach($sources as $name => $source) {
 		
 		$db->addMapping($mapping);
 		
-		$finalMapping = createMapping($db, $source['mapper'], $source);
+		$finalMapping = Output::createMapping($db, $source['mapper'], $source);
 		
 		
 		$logger->info('Creating vehicle list...');
 		
-		createVehiclesList($mapper->getTTSSTrips(), $finalMapping, $source);
+		Output::createVehiclesList($mapper->getTTSSTrips(), $finalMapping, $source);
 		
 		$logger->info('Finished');
 	} catch(Throwable $e) {
