@@ -1,8 +1,6 @@
 <?php
 require_once(__DIR__.'/vendor/autoload.php');
-require_once(__DIR__.'/lib/database.php');
 require_once(__DIR__.'/lib/fetch.php');
-require_once(__DIR__.'/lib/mapper.php');
 require_once(__DIR__.'/lib/output.php');
 require_once(__DIR__.'/lib/vehicle_types.php');
 require_once(__DIR__.'/config.php');

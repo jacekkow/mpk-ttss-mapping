@@ -1,6 +1,4 @@
 <?php
-require_once(__DIR__.'/FtpConnection.php');
-
 function ftp_fetch_if_newer($url, $file = NULL) {
 	$url = parse_url($url);
 	if(!isset($url['scheme']) || $url['scheme'] != 'ftp') {
