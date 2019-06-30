@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/FtpConnection.php');
+
 function ftp_fetch_if_newer($url, $file = NULL) {
 	$url = parse_url($url);
 	if(!isset($url['scheme']) || $url['scheme'] != 'ftp') {
@@ -30,24 +32,9 @@ function ftp_fetch_if_newer($url, $file = NULL) {
 		$localSize = filesize($file);
 	}
 	
-	$ftp = ftp_connect($url['host'], $url['port'], 10);
-	if($ftp === FALSE) {
-		throw new Exception('FTP connection failed');
-	}
-	if(!ftp_login($ftp, $url['user'], $url['pass'])) {
-		throw new Exception('FTP login failed');
-	}
-	if(!ftp_pasv($ftp, TRUE)) {
-		throw new Exception('Passive FTP request failed');
-	}
-	$remoteSize = ftp_size($ftp, $url['path']);
-	if($remoteSize < 0) {
-		throw new Exception('FTP file size fetch failed');
-	}
-	$remoteTime = ftp_mdtm($ftp, $url['path']);
-	if($remoteTime < 0) {
-		throw new Exception('FTP modification time fetch failed');
-	}
+	$ftp = FtpConnection::create($url['host'], $url['port'], $url['user'], $url['pass']);
+	$remoteSize = $ftp->size($url['path']);
+	$remoteTime = $ftp->mdtm($url['path']);
 	
 	$updated = FALSE;
 	
@@ -55,16 +42,13 @@ function ftp_fetch_if_newer($url, $file = NULL) {
 		if(file_exists($file.'.tmp')) {
 			unlink($file.'.tmp');
 		}
-		if(ftp_get($ftp, $file.'.tmp', $url['path'], FTP_BINARY)) {
-			touch($file.'.tmp', $remoteTime);
-			if(!rename($file.'.tmp', $file)) {
-				throw new Exception('Temporary file rename failed');
-			}
-			$updated = TRUE;
+		$ftp->get($file.'.tmp', $url['path'], FTP_BINARY);
+		touch($file.'.tmp', $remoteTime);
+		if(!rename($file.'.tmp', $file)) {
+			throw new Exception('Temporary file rename failed');
 		}
+		$updated = TRUE;
 	}
-	
-	ftp_close($ftp);
 	
 	return $updated;
 }
