@@ -5,15 +5,15 @@ require_once(__DIR__.'/config.php');
 foreach($sources as $name => $source) {
 	$logger = new Monolog\Logger('fetch_'.$name);
 	try {
-		$logger->info('Fetching '.$name.' position data from FTP...');
-		$updated = Fetch::ftp($source['gtfsrt'], $source['gtfsrt_file']);
+		$logger->info('Fetching '.$name.' GTFS position data ...');
+		$updated = Fetch::auto($source['gtfsrt'], $source['gtfsrt_file']);
 		if(!$updated) {
 			$logger->info('Nothing to do, remote file not newer than local one');
 			continue;
 		}
 		
-		$logger->info('Fetching '.$name.' position data from TTSS...');
-		Fetch::generic($source['ttss'], $source['ttss_file']);
+		$logger->info('Fetching '.$name.' TTSS position data...');
+		Fetch::auto($source['ttss'], $source['ttss_file']);
 		
 		$logger->info('Loading data...');
 		$mapper = new Mapper();
