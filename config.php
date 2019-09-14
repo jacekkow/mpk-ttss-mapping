@@ -15,7 +15,7 @@ $sources = [
 	'tram' => [
 		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_T.pb',
 		'gtfsrt_file' => 'VehiclePositions_T.pb',
-		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
+		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles?positionType=CORRECTED',
 		'ttss_file' => 'vehicles_T.json',
 		'database' => 'mapping_T.sqlite3',
 		'result' => 'mapping_T.json',
