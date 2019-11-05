@@ -2,7 +2,7 @@
 $tramTypes = new TramTypes();
 $sources = [
 	'bus' => [
-		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_A.pb',
+		'gtfsrt' => 'ftp://zdmk.krakow.pl/VehiclePositions_A.pb',
 		'gtfsrt_file' => 'VehiclePositions_A.pb',
 		'ttss' => 'http://ttss.mpk.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
 		'ttss_file' => 'vehicles_A.json',
@@ -13,7 +13,7 @@ $sources = [
 		'prefix' => 'b',
 	],
 	'tram' => [
-		'gtfsrt' => 'ftp://ztp.krakow.pl/VehiclePositions_T.pb',
+		'gtfsrt' => 'ftp://zdmk.krakow.pl/VehiclePositions_T.pb',
 		'gtfsrt_file' => 'VehiclePositions_T.pb',
 		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles?positionType=CORRECTED',
 		'ttss_file' => 'vehicles_T.json',
