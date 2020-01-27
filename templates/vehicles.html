@@ -80,6 +80,28 @@ a:hover {
 {% endfor %}
 </table>
 
+<table>
+<caption>Vehicles in TTSS</caption>
+<thead>
+<tr>
+<th>Vehicle</th> <th>Line</th> <th>Last seen</th>
+</tr>
+</thead>
+{% for map in mapping %}
+<tr>
+<td>
+{{ map.num | e }}
+</td>
+<td>
+{{ map.line | default('?') | e }}
+</td>
+<td>
+{{ map.date | time_diff | default('now') }}
+</td>
+</tr>
+{% endfor %}
+</table>
+
 Generated at {{ "now" | date("Y-m-d H:i:s P") }}
 
 </table>

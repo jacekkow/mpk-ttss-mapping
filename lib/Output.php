@@ -1,9 +1,19 @@
 <?php
 class Output {
-	static function createMapping($db, VehicleTypes $vehicleTypes, $saveConfig = FALSE) {
+	private $db;
+	private $mapper;
+	private $vehicleTypes;
+	
+	function __construct(Database $db, Mapper $mapper, VehicleTypes $vehicleTypes) {
+		$this->db = $db;
+		$this->mapper = $mapper;
+		$this->vehicleTypes = $vehicleTypes;
+	}
+	
+	function createMapping($saveConfig = FALSE) {
 		$mapping = [];
-		foreach($db->getAll() as $vehicle) {
-			$mapping[$vehicle['id']] = $vehicleTypes->getByNumber($vehicle['num']);
+		foreach($this->db->getAllById() as $vehicle) {
+			$mapping[$vehicle['id']] = $this->vehicleTypes->getByNumber($vehicle['num']);
 		}
 		
 		if($saveConfig) {
@@ -17,11 +27,13 @@ class Output {
 		return $mapping;
 	}
 	
-	function createVehiclesList($trips, $mapping, $saveConfig = FALSE) {
+	function createVehiclesList($fullMapping, $saveConfig = FALSE) {
+		$trips = $this->mapper->getTTSSTrips();
+		
 		$lines = [];
 		$vehicles = [];
 		foreach($trips as $trip) {
-			$vehicle = $mapping[$trip['id']] ?? [];
+			$vehicle = $fullMapping[$trip['id']] ?? [];
 			$vehicle += ['trip' => $trip['id']];
 			$lines[$trip['line']][] = [
 				'trip' => $trip,
@@ -29,6 +41,7 @@ class Output {
 			];
 			$vehicles[$vehicle['type'] ?? '?'][] = $vehicle;
 		}
+		
 		foreach($lines as &$line) {
 			usort($line, function($a, $b) {
 				return (substr($a['vehicle']['num'] ?? '', 2) <=> substr($b['vehicle']['num'] ?? '', 2)); 
@@ -36,6 +49,7 @@ class Output {
 		}
 		unset($line);
 		ksort($lines);
+		
 		foreach($vehicles as &$vehicle) {
 			usort($vehicle, function($a, $b) {
 				return (substr($a['num'] ?? '', 2) <=> substr($b['num'] ?? '', 2));
@@ -44,14 +58,19 @@ class Output {
 		unset($vehicle);
 		ksort($vehicles);
 		
+		$dbMapping = $this->db->getAllByNum();
+		ksort($dbMapping);
+		
 		if($saveConfig) {
 			$twigLoader = new \Twig\Loader\FilesystemLoader(__DIR__.'/../templates');
 			$twig = new \Twig\Environment($twigLoader);
+			$twig->addExtension(new Twig_Extensions_Extension_Date());
 			
 			$vehiclesHtml = $twig->render('vehicles.html', [
 				'lines' => $lines,
 				'vehicles' => $vehicles,
 				'prefix' => $saveConfig['prefix'],
+				'mapping' => $dbMapping,
 			]);
 			if(!file_put_contents($saveConfig['result_vehicles_temp'], $vehiclesHtml)) {
 				throw new Exception('Vehicles save failed');

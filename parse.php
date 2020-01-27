@@ -39,7 +39,7 @@ foreach($sources as $name => $source) {
 		}
 		
 		$logger->info('Got offset '.$offset.', creating mapping...');
-		$mapping = $mapper->mapUsingOffset($offset);
+		$mapping = $mapper->mapVehicleIdsUsingOffset($offset);
 		
 		$logger->info('Checking the data for correctness...');
 		$weight = count($mapping);
@@ -72,17 +72,17 @@ foreach($sources as $name => $source) {
 			throw new Exception('Ignoring result due to better data already present');
 		}
 		
+		$output = new Output($db, $mapper, $source['vehicle_types']);
 		
-		$logger->info('Creating mapping...');
+		$logger->info('Saving mapping...');
 		
-		$db->addMapping($mapping);
+		$db->addMapping($mapping, $mapper);
 		
-		$finalMapping = Output::createMapping($db, $source['mapper'], $source);
-		
+		$fullMapping = $output->createMapping($source);
 		
 		$logger->info('Creating vehicle list...');
 		
-		Output::createVehiclesList($mapper->getTTSSTrips(), $finalMapping, $source);
+		$output->createVehiclesList($fullMapping, $source);
 		
 		$logger->info('Finished');
 	} catch(Throwable $e) {

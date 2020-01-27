@@ -4,6 +4,7 @@ use transit_realtime\FeedMessage;
 class Mapper {
 	private $ttssDate = NULL;
 	private $ttssTrips = [];
+	private $ttssVehicleToTrip = [];
 	private $gtfsrtDate = NULL;
 	private $gtfsrtTrips = [];
 	private $logger = NULL;
@@ -35,18 +36,15 @@ class Mapper {
 			if(!isset($vehicle->latitude) || !$vehicle->latitude) continue;
 			if(!isset($vehicle->longitude) || !$vehicle->longitude) continue;
 			list($line, $direction) = explode(' ', $vehicle->name, 2);
-			foreach($this->specialNames as $specialName) {
-				if(substr($vehicle->name, -strlen($specialName)) == $specialName) {
-					continue;
-				}
-			}
-			$this->ttssTrips[(string)$vehicle->tripId] = [
+			$trip = [
 				'id' => (string)$vehicle->id,
 				'line' => $line,
 				'direction' => $direction,
 				'latitude' => (float)$vehicle->latitude / 3600000.0,
 				'longitude' => (float)$vehicle->longitude / 3600000.0,
 			];
+			$this->ttssTrips[(string)$vehicle->tripId] = $trip;
+			$this->ttssVehicleToTrip[(string)$vehicle->id] = $trip;
 		}
 		ksort($this->ttssTrips);
 	}
@@ -57,6 +55,18 @@ class Mapper {
 	
 	public function getTTSSTrips() {
 		return $this->ttssTrips;
+	}
+	
+	public function getTTSSVehicleToTrip() {
+		return $this->ttssVehicleToTrip;
+	}
+	
+	public function getTTSSTrip($id) {
+		return $this->ttssTrips[$id] ?? NULL;
+	}
+	
+	public function getTTSSVehicleTrip($id) {
+		return $this->ttssVehicleToTrip[$id] ?? NULL;
 	}
 	
 	public function loadGTFSRT($file) {
@@ -130,7 +140,7 @@ class Mapper {
 		return $bestOffset;
 	}
 	
-	public function mapUsingOffset($offset) {
+	public function mapVehicleIdsUsingOffset($offset) {
 		$result = [];
 		foreach($this->gtfsrtTrips as $gtfsTripId => $gtfsTrip) {
 			$ttssTripId = $gtfsTripId + $offset;
