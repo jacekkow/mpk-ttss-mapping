@@ -91,7 +91,9 @@ a:hover {
 {% for map in mapping %}
 <tr>
 <td>
-{{ map.num | e }}
+<a href="https://mpk.jacekk.net/map.html#!{{ map.vehicle.num }}" class="low{{ map.vehicle.low | default }}">
+{{ map.vehicle.num | e }}
+</a>
 </td>
 <td>
 {{ map.line | default('?') | e }}

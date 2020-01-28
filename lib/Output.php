@@ -59,6 +59,10 @@ class Output {
 		ksort($vehicles);
 		
 		$dbMapping = $this->db->getAllByNum();
+		foreach($dbMapping as &$vehicle) {
+			$vehicle['vehicle'] = $this->vehicleTypes->getByNumber($vehicle['num']);
+		}
+		unset($vehicle);
 		ksort($dbMapping);
 		
 		if($saveConfig) {
