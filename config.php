@@ -1,7 +1,7 @@
 <?php
 $sources = [
 	'bus' => [
-		'gtfsrt' => 'ftp://zdmk.krakow.pl/VehiclePositions_A.pb',
+		'gtfsrt' => 'ftp://ztp.krakow.pl/pliki-gtfs/VehiclePositions_A.pb',
 		'gtfsrt_file' => 'VehiclePositions_A.pb',
 		'ttss' => 'http://ttss.mpk.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles',
 		'ttss_file' => 'vehicles_A.json',
@@ -12,7 +12,7 @@ $sources = [
 		'prefix' => 'b',
 	],
 	'tram' => [
-		'gtfsrt' => 'http://gtfs.ztp.krakow.pl/VehiclePositions_T.pb',
+		'gtfsrt' => 'ftp://ztp.krakow.pl/pliki-gtfs/VehiclePositions_T.pb',
 		'gtfsrt_file' => 'VehiclePositions_T.pb',
 		'ttss' => 'http://www.ttss.krakow.pl/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles?positionType=CORRECTED',
 		'ttss_file' => 'vehicles_T.json',
