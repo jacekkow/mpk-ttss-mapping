@@ -48,4 +48,11 @@ class TramTypes extends VehicleTypes {
 END;
 		parent::__construct($data);
 	}
+	
+	public function getByNumber($id) {
+		if($id == 312) {
+			$id = 316;
+		}
+		return parent::getByNumber($id);
+	}
 }
