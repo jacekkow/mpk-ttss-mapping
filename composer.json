@@ -8,6 +8,9 @@
         "google/gtfs-realtime-bindings": "^0.0.2",
         "monolog/monolog": "^1.24",
         "twig/twig": "^2.0",
-        "twig/extensions": "^1.5"
+        "twig/extensions": "^1.5",
+        "ext-ftp": "*",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*"
     }
 }
