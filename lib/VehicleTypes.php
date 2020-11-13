@@ -17,8 +17,9 @@ abstract class VehicleTypes {
 	}
 	
 	public function getByNumber($id) {
+		$id = intval($id, 10);
 		return $this->typesByNumber[$id] ?? [
-			'num' => '??'.$id,
+			'num' => '??' . str_pad($id, 3, '0', STR_PAD_LEFT),
 			'type' => '?',
 			'low' => NULL,
 		];
