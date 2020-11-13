@@ -3,7 +3,7 @@ class BusTypes extends VehicleTypes {
 	public function __construct() {
 		$data = <<<'END'
 2	4	DN	Solaris Urbino 18 IV Electric
-5	5	DN	Solaris Urbino 18 III Electric
+5	6	DN	Solaris Urbino 18 III Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	96	BH	Volvo 7900A Hybrid
 103	105	PA	Mercedes-Benz 516
