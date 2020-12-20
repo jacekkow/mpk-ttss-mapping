@@ -6,6 +6,7 @@ class BusTypes extends VehicleTypes {
 5	6	DN	Solaris Urbino 18 III Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	96	BH	Volvo 7900A Hybrid
+102	102	PA	Mercedes-Benz Sprinter City 75
 103	105	PA	Mercedes-Benz 516
 106	112	DA	Autosan M09LE
 113	121	BA	Autosan M09LE
