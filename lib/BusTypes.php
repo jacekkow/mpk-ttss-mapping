@@ -36,7 +36,7 @@ class BusTypes extends VehicleTypes {
 607	623	DE	Solaris Urbino 12 IV Electric
 700	700	DC	Mercedes Conecto G
 701	731	DC	Mercedes O530G
-732	733	DC	Mercedes Conecto G
+732	734	DC	Mercedes Conecto G
 737	741	BR	Solaris Urbino 18 III
 742	745	DR	Solaris Urbino 18 III
 746	764	PR	Solaris Urbino 18 III
