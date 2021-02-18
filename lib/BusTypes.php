@@ -4,6 +4,7 @@ class BusTypes extends VehicleTypes {
 		$data = <<<'END'
 2	4	DN	Solaris Urbino 18 IV Electric
 5	6	DN	Solaris Urbino 18 III Electric
+7	56	DN	Solaris Urbino 18 IV Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	96	BH	Volvo 7900A Hybrid
 102	102	PA	Mercedes-Benz Sprinter City 75
