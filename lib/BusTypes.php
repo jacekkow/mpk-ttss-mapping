@@ -2,11 +2,12 @@
 class BusTypes extends VehicleTypes {
 	public function __construct() {
 		$data = <<<'END'
-2	4	DN	Solaris Urbino 18 IV Electric
+1	4	DN	Solaris Urbino 18 IV Electric
 5	6	DN	Solaris Urbino 18 III Electric
 7	56	DN	Solaris Urbino 18 IV Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	96	BH	Volvo 7900A Hybrid
+100	101	PA	Karsan Jest
 102	102	PA	Mercedes-Benz Sprinter City 75
 103	105	PA	Mercedes-Benz 516
 106	112	DA	Autosan M09LE
@@ -23,13 +24,11 @@ class BusTypes extends VehicleTypes {
 336	336	BU	Solaris Urbino 12 IV
 337	338	PU	Solaris Urbino 12 IV
 339	340	BU	Solaris Urbino 12 IV
-341	345	PU	Solaris Urbino 12 III
 400	403	BH	Solaris Urbino 12,9 III Hybrid
 404	408	DH	Solaris Urbino 12,9 III Hybrid
-410	410	DH	Solaris Urbino 12 III Hybrid
 501	510	BR	Solaris Urbino 18 IV
-511	568	DR	Solaris Urbino 18 IV
-569	579	BR	Solaris Urbino 18 IV
+511	563	DR	Solaris Urbino 18 IV
+564	579	BR	Solaris Urbino 18 IV
 580	595	DR	Solaris Urbino 18 IV
 601	601	DE	Solaris Urbino 12 III Electric
 602	605	DE	Solaris Urbino 8,9LE Electric
@@ -41,9 +40,10 @@ class BusTypes extends VehicleTypes {
 737	741	BR	Solaris Urbino 18 III
 742	745	DR	Solaris Urbino 18 III
 746	764	PR	Solaris Urbino 18 III
-765	768	DR	Solaris Urbino 18 III
+765	766	DR	Solaris Urbino 18 III
+767	768	PR	Solaris Urbino 18 III
 769	776	PR	Solaris Urbino 18 MetroStyle
-777	777	DR	Solaris Urbino 18 III
+777	777	PR	Solaris Urbino 18 III
 778	797	PR	Solaris Urbino 18 IV
 851	926	BU	Solaris Urbino 12 III
 927	976	PU	Solaris Urbino 12 III
