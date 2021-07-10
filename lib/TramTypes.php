@@ -50,9 +50,6 @@ END;
 	}
 	
 	public function getByNumber($id) {
-		if($id == 312) {
-			$id = 316;
-		}
 		return parent::getByNumber($id);
 	}
 }
