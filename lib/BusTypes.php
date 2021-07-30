@@ -27,8 +27,8 @@ class BusTypes extends VehicleTypes {
 400	403	BH	Solaris Urbino 12,9 III Hybrid
 404	408	DH	Solaris Urbino 12,9 III Hybrid
 501	510	BR	Solaris Urbino 18 IV
-511	563	DR	Solaris Urbino 18 IV
-564	579	BR	Solaris Urbino 18 IV
+511	560	DR	Solaris Urbino 18 IV
+561	579	BR	Solaris Urbino 18 IV
 580	595	DR	Solaris Urbino 18 IV
 601	601	DE	Solaris Urbino 12 III Electric
 602	605	DE	Solaris Urbino 8,9LE Electric
@@ -39,9 +39,7 @@ class BusTypes extends VehicleTypes {
 732	734	DC	Mercedes Conecto G
 737	741	BR	Solaris Urbino 18 III
 742	745	DR	Solaris Urbino 18 III
-746	764	PR	Solaris Urbino 18 III
-765	766	DR	Solaris Urbino 18 III
-767	768	PR	Solaris Urbino 18 III
+746	768	PR	Solaris Urbino 18 III
 769	776	PR	Solaris Urbino 18 MetroStyle
 777	777	PR	Solaris Urbino 18 III
 778	797	PR	Solaris Urbino 18 IV
