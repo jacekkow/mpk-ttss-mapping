@@ -24,12 +24,14 @@ class BusTypes extends VehicleTypes {
 336	336	BU	Solaris Urbino 12 IV
 337	338	PU	Solaris Urbino 12 IV
 339	340	BU	Solaris Urbino 12 IV
+341	349	KU	Solaris Urbino 12 IV
 400	403	BH	Solaris Urbino 12,9 III Hybrid
 404	408	DH	Solaris Urbino 12,9 III Hybrid
 501	510	BR	Solaris Urbino 18 IV
 511	560	DR	Solaris Urbino 18 IV
 561	579	BR	Solaris Urbino 18 IV
 580	595	DR	Solaris Urbino 18 IV
+596	598	KR	Solaris Urbino 18 IV
 601	601	DE	Solaris Urbino 12 III Electric
 602	605	DE	Solaris Urbino 8,9LE Electric
 606	606	DE	Solaris Urbino 12 III Electric
