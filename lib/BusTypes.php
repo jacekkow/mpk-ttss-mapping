@@ -14,7 +14,7 @@ class BusTypes extends VehicleTypes {
 113	121	BA	Autosan M09LE
 122	132	DA	Autosan M09LE
 133	141	BA	Autosan M09LE
-200	200	DO	Mercedes Conecto
+200	201	DO	Mercedes Conecto
 206	210	PO	Mercedes O530 C2 Hybrid
 211	218	DO	Mercedes O530
 219	243	PO	Mercedes O530 C2 Hybrid
