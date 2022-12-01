@@ -27,6 +27,7 @@ class BusTypes extends VehicleTypes {
 341	349	KU	Solaris Urbino 12 IV
 400	403	BH	Solaris Urbino 12,9 III Hybrid
 404	408	DH	Solaris Urbino 12,9 III Hybrid
+493	493	KM	MAN Lion's Intercity LE 13
 501	510	BR	Solaris Urbino 18 IV
 511	560	DR	Solaris Urbino 18 IV
 561	579	BR	Solaris Urbino 18 IV
