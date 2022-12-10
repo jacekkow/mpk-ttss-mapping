@@ -6,7 +6,7 @@ class BusTypes extends VehicleTypes {
 5	6	DN	Solaris Urbino 18 III Electric
 7	56	DN	Solaris Urbino 18 IV Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
-84	96	BH	Volvo 7900A Hybrid
+84	95	BH	Volvo 7900A Hybrid
 100	101	PA	Karsan Jest
 102	102	PA	Mercedes-Benz Sprinter City 75
 103	105	PA	Mercedes-Benz 516
@@ -14,7 +14,8 @@ class BusTypes extends VehicleTypes {
 113	121	BA	Autosan M09LE
 122	132	DA	Autosan M09LE
 133	141	BA	Autosan M09LE
-200	201	DO	Mercedes Conecto
+200	200	DO	Mercedes Conecto
+201	201	DO	Mercedes Conecto II
 206	210	PO	Mercedes O530 C2 Hybrid
 211	218	DO	Mercedes O530
 219	243	PO	Mercedes O530 C2 Hybrid
@@ -27,7 +28,8 @@ class BusTypes extends VehicleTypes {
 341	349	KU	Solaris Urbino 12 IV
 400	403	BH	Solaris Urbino 12,9 III Hybrid
 404	408	DH	Solaris Urbino 12,9 III Hybrid
-493	493	KM	MAN Lion's Intercity LE 13
+409	409	BH	Volvo 7900 Hybrid
+490	499	KM	MAN Lion's Intercity 13
 501	510	BR	Solaris Urbino 18 IV
 511	560	DR	Solaris Urbino 18 IV
 561	579	BR	Solaris Urbino 18 IV
