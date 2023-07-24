@@ -4,7 +4,7 @@ class BusTypes extends VehicleTypes {
 		$data = <<<'END'
 1	4	DN	Solaris Urbino 18 IV Electric
 5	6	DN	Solaris Urbino 18 III Electric
-7	56	DN	Solaris Urbino 18 IV Electric
+7	63	DN	Solaris Urbino 18 IV Electric
 71	83	BH	Solaris Urbino 18 III Hybrid
 84	95	BH	Volvo 7900A Hybrid
 100	101	PA	Karsan Jest
@@ -19,9 +19,11 @@ class BusTypes extends VehicleTypes {
 206	210	PO	Mercedes O530 C2 Hybrid
 211	218	DO	Mercedes O530
 219	243	PO	Mercedes O530 C2 Hybrid
-244	269	DO	Mercedes O530 C2
-270	299	BO	Mercedes O530 C2
-301	335	DU	Solaris Urbino 12 IV
+244	259	DO	Mercedes O530 C2
+260	299	BO	Mercedes O530 C2
+301	318	DU	Solaris Urbino 12 IV
+319	333	BU	Solaris Urbino 12 IV
+334	335	PU	Solaris Urbino 12 IV
 336	336	BU	Solaris Urbino 12 IV
 337	338	PU	Solaris Urbino 12 IV
 339	340	BU	Solaris Urbino 12 IV
@@ -31,14 +33,14 @@ class BusTypes extends VehicleTypes {
 409	409	BH	Volvo 7900 Hybrid
 490	499	KM	MAN Lion's Intercity 13
 501	510	BR	Solaris Urbino 18 IV
-511	560	DR	Solaris Urbino 18 IV
-561	579	BR	Solaris Urbino 18 IV
+511	556	DR	Solaris Urbino 18 IV
+557	579	BR	Solaris Urbino 18 IV
 580	595	DR	Solaris Urbino 18 IV
 596	598	KR	Solaris Urbino 18 IV
 601	601	DE	Solaris Urbino 12 III Electric
 602	605	DE	Solaris Urbino 8,9LE Electric
 606	606	DE	Solaris Urbino 12 III Electric
-607	623	DE	Solaris Urbino 12 IV Electric
+607	636	DE	Solaris Urbino 12 IV Electric
 700	700	DC	Mercedes Conecto G
 701	731	DC	Mercedes O530G
 732	734	DC	Mercedes Conecto G
