@@ -82,6 +82,7 @@ class Fetch {
 				'header' => [
 					'If-Modified-Since: '.gmdate('D, d M Y H:i:s T', $file_date),
 				],
+				'timeout' => 15,
 			];
 		}
 		
